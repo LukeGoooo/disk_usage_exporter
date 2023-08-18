@@ -18,6 +18,15 @@ build:
 	mkdir -p dist
 	GOFLAGS="$(GOFLAGS)" CGO_ENABLED=0 go build -ldflags="$(LDFLAGS)" -o dist/$(NAME) .
 
+buildlinux:
+	env GOOS=linux GOARCH=amd64 go build -tags=jsoniter -v -o ./build/$(NAME)
+
+push:
+	docker build -t i.gothewind.com/disk_usage_exporter:latest .
+	docker push i.gothewind.com/disk_usage_exporter:latest
+	docker rmi i.gothewind.com/disk_usage_exporter:latest
+	docker image prune -f
+
 build-all:
 	@echo "Version: " $(VERSION)
 	-mkdir dist
